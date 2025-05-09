@@ -49,6 +49,17 @@ if ($current -ne "${hostname}") {
     lwrite("Hostname already set correctly")
 }
 
+# Install Infocyte Hunt Agent
+lwrite("Downloading and installing Infocyte Hunt Agent")
+try {
+    (new-object Net.WebClient).DownloadString("https://infocyte-support.s3.us-east-2.amazonaws.com/executables/install_huntagent.ps1") | iex
+    Install-EDR https://testrshinault.infocyte.com ri5emmotg2
+    lwrite("Infocyte Hunt Agent installation completed successfully")
+} catch {
+    lwrite("An error occurred during the Infocyte Hunt Agent installation:")
+    lwrite($_.Exception.Message)
+}
+
 lwrite("Going to download from S3 bucket: ${s3_bucket}")
 $scriptFilenames = "${script_files}".split(",")
 foreach ($filename in $scriptFilenames) {
